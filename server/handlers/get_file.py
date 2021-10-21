@@ -29,7 +29,7 @@ class FilesHandler(tornado.web.RequestHandler):
 
 		print("Token is correct")
 		if file_id:
-			if self.if_exist_with_the_givem_file_id(file_id):
+			if self.if_exist_with_the_given_file_id(file_id):
 				print("file with the given ID exists")
 				file_details_url = additional_file_details_url.format(snackableFileId = file_id)
 				file_segments_uri = file_segment_url.format(snackableFileId = file_id)
@@ -38,7 +38,7 @@ class FilesHandler(tornado.web.RequestHandler):
 				file_segment_data = await make_web_request(file_segments_uri, {}, {})
 				result["file segments"] =  json.loads(file_segment_data.body.decode('utf-8'))
 				self.write(json.dumps(result))
-				self.set_status(200)## bad request
+				self.set_status(200)
 				self.finish()
 				return
 
@@ -46,13 +46,13 @@ class FilesHandler(tornado.web.RequestHandler):
 		self.finish()
 		##return error
 
-	def if_exist_with_the_givem_file_id(self, file_id):
+	def if_exist_with_the_given_file_id(self, file_id):
 		for f in self.files:
 			if f["fileId"] == file_id:
 				return True
 		return False
 
 def get_token(header):
-	if not header.startswith(PREFIX):
+	if header == None or not header.startswith(PREFIX):
 		return ""
 	return header[len(PREFIX):]
